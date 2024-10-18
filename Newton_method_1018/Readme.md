@@ -49,3 +49,4 @@ that the path should avoid.
 
     print('origin_path', origin_path)
     ```
+7. 所有測試的檔案都是放在`test`資料夾底下。
