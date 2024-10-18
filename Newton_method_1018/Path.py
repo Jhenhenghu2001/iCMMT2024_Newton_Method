@@ -110,3 +110,13 @@ def generate_new_path(path, obstacles, safety_size, offset_distance):
         new_paths.append(np.array(new_path))
 
     return new_paths, indices_of_closest_points  # 返回所有障礙物的新路徑和closest_points的索引
+
+def update_origin_path(origin_path, X_opt_final, indices_of_closest_points):
+
+    new_origin_path = origin_path.copy()
+    new_origin_path = np.delete(new_origin_path, new_origin_path[indices_of_closest_points[1]:], axis=0)
+    new_origin_path = np.vstack((new_origin_path, X_opt_final))
+    new_origin_path = np.vstack((new_origin_path, origin_path[indices_of_closest_points[-1]:]))
+    print('new_origin_path', new_origin_path)
+    
+    return new_origin_path

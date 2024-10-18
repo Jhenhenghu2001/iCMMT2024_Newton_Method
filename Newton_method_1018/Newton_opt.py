@@ -40,10 +40,10 @@ def newton_method(X_init, X_ori, W, max_iter=1000, tol=1e-3):
         
         # 計算誤差：這裡可以用梯度的範數來表示
         error = np.linalg.norm(grad)
-        
+
         # 更新 X
         X = X_new
-    #     print('X', X)
+        print('X', X)
     # print('k', k)
     return X, k
 

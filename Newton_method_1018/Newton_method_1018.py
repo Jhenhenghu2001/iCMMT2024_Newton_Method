@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from Obstacle_detection import point_in_obstacle, line_intersects_any_obstacle, find_closest_obstacle
+from Obstacle_detection import line_intersects_any_obstacle, find_closest_obstacle, point_in_obstacle
 from GUI import visualize_grid
-from Path import generate_initial_path, path_before_obstacle_avoidance, generate_new_path, calculate_path_length
+from Path import generate_initial_path, path_before_obstacle_avoidance, generate_new_path, update_origin_path, calculate_path_length
 from Newton_opt import newton_method
 
 fig, ax = plt.subplots()
@@ -69,12 +69,13 @@ while np.linalg.norm(current_position - goal) > 0.1:
                 X_opt_final = [points_on_obstacle[0]] + list(optimized_path) + [points_on_obstacle[-1]]
         
         # 以上程式結束後所得到的X_opt_final是最佳化路徑結果(包含避障起始點和避障結束點)
-        # origin_path 
-
-
-        # # 將當前位置沿著新的路徑移動，更新current_position
-        # origin_path = X_opt_final  # 更新路徑
-        # # current_position_index = 0  # 重新從起點開始走
+        
+        # 更新 origin_path 
+        origin_path = update_origin_path(origin_path, X_opt_final, indices_of_closest_points)
+        # 更新當前位置
+        current_position = next_position
+        current_position_index += 1
+        full_path_traveled.append(current_position)
     else:
         # 沒有碰到障礙物，更新當前位置
         current_position = next_position
