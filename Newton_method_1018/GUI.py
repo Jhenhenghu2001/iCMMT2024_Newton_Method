@@ -52,5 +52,5 @@ def visualize_grid(ax, start, goal, obstacles, circle_radius=None, positions=Non
     ax.legend()
     ax.grid(True)
     plt.draw()
-    plt.pause(0.5)
+    plt.pause(1)
     

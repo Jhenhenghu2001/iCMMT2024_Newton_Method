@@ -51,27 +51,36 @@ while np.linalg.norm(current_position - goal) > 0.1:
         if closest_obstacle is not None:
             visited_obstacles.append(closest_obstacle)
 
-        # 找到初始路徑中所有經過最近障礙物的點
-        points_on_obstacle = path_before_obstacle_avoidance(origin_path, closest_obstacle, safety_distance)
+        # 找到初始路徑中所有經過最近障礙物的點，包含這幾個點位的陣列中首個和最後的點位之相鄰點位
+        # 這兩個相鄰點位做為避障起始、結束點位，但這兩點位不會跟著一起偏移和最佳化
+        points_on_obstacle, indices_of_closest_points = path_before_obstacle_avoidance(origin_path, closest_obstacle, safety_distance)
 
         # 根據避障策略生成新的路徑，將避障點設為 initial guess
-        new_path, indices_of_closest_points = generate_new_path(points_on_obstacle, closest_obstacle, safety_distance, offset_distance=1.0)
-
-        # 使用牛頓法進行路徑最佳化
-        optimized_path, iter_num = newton_method(new_path, points_on_obstacle, W)
-
-        # 確認新路徑是否避開障礙物
-        X_opt_final = [points_on_obstacle[0]] + list(optimized_path) + [points_on_obstacle[-1]]
-        for i in range(len(X_opt_final) - 1):
-            if line_intersects_any_obstacle(X_opt_final[i], X_opt_final[i+1], obstacles, safety_distance):
-                # 若新路徑有經過障礙物，將當前解(optimized_path)作為 initial guess 重新最佳化
-                optimized_path, iter_num = newton_method(optimized_path, points_on_obstacle, W)
-                X_opt_final = [points_on_obstacle[0]] + list(optimized_path) + [points_on_obstacle[-1]]
+        new_path = generate_new_path(points_on_obstacle, closest_obstacle, safety_distance, offset_distance=1.0)
         
+        # 若不使用牛頓法最佳化的點位，而是用這裡單純偏移後的點位，就要以下這行程式把new_path轉型別，
+        # 然後放入origin_path = update_origin_path(origin_path, new_path, indices_of_closest_points)使用
+        new_path = np.array(new_path)
+
+        # # 使用牛頓法進行路徑最佳化
+        # optimized_path, iter_num = newton_method(new_path, points_on_obstacle, W)
+        # # 確認新路徑是否避開障礙物
+        # X_opt_final = optimized_path
+        # # X_opt_final = [points_on_obstacle[0]] + list(optimized_path) + [points_on_obstacle[-1]]
+        # for i in range(len(X_opt_final) - 1):
+        #     if line_intersects_any_obstacle(X_opt_final[i], X_opt_final[i+1], obstacles, safety_distance):
+        #         # 若新路徑有經過障礙物，將當前解(optimized_path)作為 initial guess 重新最佳化
+        #         optimized_path, iter_num = newton_method(optimized_path, points_on_obstacle, W)
+        #         # X_opt_final = [points_on_obstacle[0]] + list(optimized_path) + [points_on_obstacle[-1]]
+
         # 以上程式結束後所得到的X_opt_final是最佳化路徑結果(包含避障起始點和避障結束點)
         
         # 更新 origin_path 
-        origin_path = update_origin_path(origin_path, X_opt_final, indices_of_closest_points)
+        # origin_path = update_origin_path(origin_path, X_opt_final, indices_of_closest_points)
+        
+        # 若不使用牛頓法最佳化的點位，而是用new_path點位，則用這行程式更新origin_path
+        origin_path = update_origin_path(origin_path, new_path, indices_of_closest_points)
+
         # 更新當前位置
         current_position = next_position
         current_position_index += 1
@@ -86,7 +95,7 @@ while np.linalg.norm(current_position - goal) > 0.1:
     if np.linalg.norm(current_position - goal) <= 0.1:
         print("到達終點!")
         break
-
+    # print('current origin_path', origin_path)
     # 更新視覺化
-    visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, positions=current_position, original_path=initial_path, closest_points=full_path_traveled)
+    visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, positions=current_position, original_path=initial_path)
 plt.show()

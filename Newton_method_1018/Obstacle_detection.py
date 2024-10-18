@@ -6,10 +6,10 @@ def point_in_obstacle(point, obstacle, safety_size):
     # 增加障礙物周圍的安全距離，同時考慮點位的半徑
     expanded_bottom_left = bottom_left - np.array([safety_size, safety_size])
     expanded_top_right = top_right + np.array([safety_size, safety_size])
-    
     # 檢查點是否在擴展過的矩形內
-    return (expanded_bottom_left[0] <= point[0] <= expanded_top_right[0] and
+    value = (expanded_bottom_left[0] <= point[0] <= expanded_top_right[0] and
             expanded_bottom_left[1] <= point[1] <= expanded_top_right[1])
+    return value
 
 # 判斷「線段」是否穿過擴展過的矩形範圍（障礙物含安全距離）
 def line_intersects_any_obstacle(p1, p2, obstacles, safety_size):

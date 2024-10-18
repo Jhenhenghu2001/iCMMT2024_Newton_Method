@@ -2,7 +2,54 @@ import numpy as np
 
 # Obstacle avoidance path planning optimization using Newton's method.
 
-def newton_method(X_init, X_ori, W, max_iter=1000, tol=1e-3):
+# def newton_method(X_init, X_ori, W, max_iter=5, tol=1e-3):
+#     """
+#     使用多維牛頓法進行最佳化，直到滿足收斂條件或達到最大迭代次數。
+    
+#     參數：
+#     - X_init: 初始點 [X1*, X2*, X3*] 的向量
+#     - X_ori: 原始點，包括 XT, X1_ori, X2_ori, X3_ori, XH
+#     - W: 權重向量
+
+#     限制條件：
+#     - max_iter: 最大迭代次數 (預設 5)
+#     - tol: 收斂誤差門檻值 (預設 1e-3)
+    
+#     回傳：
+#     - X_opt: 最佳化後的點位 [X1*, X2*, X3*]
+#     - k: 總迭代次數
+#     """
+
+#     X = X_init  # 初始化 X
+#     error = np.inf  # 初始化誤差，設為無窮大
+#     k = 0  # 初始化迭代次數
+#     # print('initial X ', X_init)
+#     while error > tol or k < max_iter:
+#         k += 1
+        
+#         # 計算梯度和 Hessian 的逆矩陣
+#         grad = gradient(X, X_ori, W)
+#         H_inv = inverse_hessian(W)
+        
+#         # 調整梯度形狀
+#         grad_flat = grad.reshape(-1)  # 展開梯度為一維向量
+#         # 更新 X(k+1) = X(k) - H^(-1) * grad
+#         X_new = np.array(X).reshape(-1) - np.dot(H_inv, grad_flat)
+#         # 將 X_new 重新調整回原來的形狀
+#         X_new = X_new.reshape(1, 3, 2)
+#         # 計算誤差：取前一次迭代的位置與當次迭代的位置的范數
+#         error = np.linalg.norm()
+
+#         # 更新 X
+#         X = X_new
+#         # print('X', X)
+#     # print('k', k)
+#     # print('before flip X', X)
+#     X = np.flip(X, axis=1) # 調回原先矩陣的形狀後所有內部矩陣順序會顛倒，因此要反轉回來
+#     # print('after flip X', X)
+#     return X, k
+
+def newton_method(X_init, X_ori, W, tol=1e-3):
     """
     使用多維牛頓法進行最佳化，直到滿足收斂條件或達到最大迭代次數。
     
@@ -12,19 +59,20 @@ def newton_method(X_init, X_ori, W, max_iter=1000, tol=1e-3):
     - W: 權重向量
 
     限制條件：
-    - max_iter: 最大迭代次數 (預設 1000)
     - tol: 收斂誤差門檻值 (預設 1e-3)
     
     回傳：
     - X_opt: 最佳化後的點位 [X1*, X2*, X3*]
     - k: 總迭代次數
     """
-    
+
     X = X_init  # 初始化 X
-    error = np.inf  # 初始化誤差，設為無窮大
+    print('X type', type(X))
+    error = 100  # 初始化誤差
     k = 0  # 初始化迭代次數
+    X_prev = X  # 記錄前一次的 X
     # print('initial X ', X_init)
-    while error > tol and k < max_iter:
+    while error > tol:  # 當 error 大於 tol
         k += 1
         
         # 計算梯度和 Hessian 的逆矩陣
@@ -38,13 +86,20 @@ def newton_method(X_init, X_ori, W, max_iter=1000, tol=1e-3):
         # 將 X_new 重新調整回原來的形狀
         X_new = X_new.reshape(1, 3, 2)
         
-        # 計算誤差：這裡可以用梯度的範數來表示
-        error = np.linalg.norm(grad)
-
+        # 計算誤差：取當次迭代的位置與前一次迭代的位置的范數
+        error = np.linalg.norm(X_new - X_prev)
+        
+        # 更新 X_prev 為當前的 X，以便下一次計算誤差
+        X_prev = X_new
+        
         # 更新 X
         X = X_new
-        print('X', X)
+        # print('X', X)
     # print('k', k)
+    # print('error', error)
+    # print('before flip X', X)
+    X = np.flip(X, axis=1)  # 調回原先矩陣的形狀後所有內部矩陣順序會顛倒，因此要反轉回來
+    # print('after flip X', X)
     return X, k
 
 def objective_function(X, X_ori, W):
