@@ -101,7 +101,6 @@ def find_closest_obstacle(current_position, obstacle_list, visited_obstacles):
         if any(np.array_equal(obstacle, visited) for visited in visited_obstacles):
             continue  # 跳過已經訪問過的障礙物
         # 計算當前位置到障礙物中心的距離
-        print('obs ', obstacle)
         bottom_left, top_right = obstacle
         obstacle_center = (bottom_left + top_right) / 2
         distance = np.linalg.norm(current_position - obstacle_center)

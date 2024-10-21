@@ -61,11 +61,12 @@ while np.linalg.norm(current_position - goal) > 0.1:
         # 若不使用牛頓法最佳化的點位，而是用這裡單純偏移後的點位，就要以下這行程式把new_path轉型別，
         # 然後放入origin_path = update_origin_path(origin_path, new_path, indices_of_closest_points)使用
         new_path = np.array(new_path)
-        # print('new_path', new_path)
 
         # # 使用牛頓法進行路徑最佳化
+        # print(type(new_path))
+        # print(type(points_on_obstacle))
         # optimized_path, iter_num = newton_method(new_path, points_on_obstacle, W)
-        # # 確認新路徑是否避開障礙物
+        # # # 確認新路徑是否避開障礙物
         # X_opt_final = optimized_path
         # # X_opt_final = [points_on_obstacle[0]] + list(optimized_path) + [points_on_obstacle[-1]]
         # for i in range(len(X_opt_final) - 1):
@@ -77,8 +78,11 @@ while np.linalg.norm(current_position - goal) > 0.1:
         # 以上程式結束後所得到的X_opt_final是最佳化路徑結果(包含避障起始點和避障結束點)
         
         # 更新 origin_path 
+        # # print('origin_path 1 = ', origin_path)
         # origin_path = update_origin_path(origin_path, X_opt_final, indices_of_closest_points)
-        
+        # # print('X_opt_final = ', X_opt_final)
+        # # print('origin_path 2 = ', origin_path)
+
         # 若不使用牛頓法最佳化的點位，而是用new_path點位，則用這行程式更新origin_path
         # print('origin_path 1 = ', origin_path)
         origin_path = update_origin_path(origin_path, new_path, indices_of_closest_points)
@@ -92,11 +96,13 @@ while np.linalg.norm(current_position - goal) > 0.1:
         # 檢查是否到達終點
         if np.linalg.norm(current_position - goal) <= 0.1:
             print("到達終點!")
+            current_position = origin_path[current_position_index]
+            full_path_traveled.append(current_position)
             break
         # print('current origin_path', origin_path)
         # 更新視覺化
         # print('new_path', new_path)
-        visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, positions=current_position, original_path=initial_path, new_points=new_path, path = full_path_traveled)
+        visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, positions=current_position, original_path=initial_path, path = full_path_traveled)
     else:
         # 沒有碰到障礙物，更新當前位置
         current_position = next_position
