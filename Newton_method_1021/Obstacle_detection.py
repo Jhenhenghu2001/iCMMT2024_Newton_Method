@@ -83,7 +83,7 @@ def line_segments_intersect(p1, p2, q1, q2):
 def find_closest_obstacle(current_position, obstacle_list, visited_obstacles):
     """
     找出最近的未經過的矩形障礙物。
-    
+
     參數：
     current_position (np.array): 當前點位的位置 [x, y]。
     obstacle_list (list): 包含矩形障礙物的列表，每個障礙物是 (np.array([x1, y1]), np.array([x2, y2]))。
@@ -92,14 +92,16 @@ def find_closest_obstacle(current_position, obstacle_list, visited_obstacles):
     返回：
     tuple: 最近的未經過障礙物 (np.array([x1, y1]), np.array([x2, y2]))。
     """
-    
+    # print(type(obstacle_list))
+    # print(type(visited_obstacles))
     closest_obstacle = None
     min_distance = float('inf')
     
     for obstacle in obstacle_list:
-        if obstacle in visited_obstacles:
+        if any(np.array_equal(obstacle, visited) for visited in visited_obstacles):
             continue  # 跳過已經訪問過的障礙物
         # 計算當前位置到障礙物中心的距離
+        print('obs ', obstacle)
         bottom_left, top_right = obstacle
         obstacle_center = (bottom_left + top_right) / 2
         distance = np.linalg.norm(current_position - obstacle_center)

@@ -45,8 +45,8 @@ while np.linalg.norm(current_position - goal) > 0.1:
     # 檢查當前點到下一個點的線段是否經過障礙物或安全區域
     if line_intersects_any_obstacle(current_position, next_position, obstacles, safety_distance):
         # 找到最近的障礙物，並準備進行避障
+        # print('visited obs', visited_obstacles)
         closest_obstacle = find_closest_obstacle(current_position, obstacles, visited_obstacles)
-        
         # 如果找到了最近的障礙物，則將其加入 visited_obstacles
         if closest_obstacle is not None:
             visited_obstacles.append(closest_obstacle)
