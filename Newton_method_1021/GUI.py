@@ -28,17 +28,18 @@ def visualize_grid(ax, start, goal, obstacles, circle_radius=None, positions=Non
             ax.plot(positions[0], positions[1], 'bo', label='Recent Point')
 
     # 新生成的避障路徑
-    if new_points is not None and len(new_points) > 0:
-        new_points = np.array(new_points)
-        for point in new_points:
-            ax.plot(point[0], point[1], 'm-o', label='Avoidance Path')
-
+    if new_points is not None:
+        # 假設 new_points 是一個包含路徑的列表，遍歷所有路徑中的點
+        for path in new_points:  # 這裡 new_points 是包含單一路徑的列表
+            for point in path:  # 遍歷路徑中的每個點
+                ax.plot(point[0], point[1], 'm*', label='Avoidance Path')
     # 路徑的圓形
     if path is not None:
         path = np.array(path)
         for pos in path:
-            circle = plt.Circle(pos, radius=circle_radius, color='b', fill=True)
+            circle = plt.Circle(pos, radius=circle_radius, color='k', fill=True)
             ax.add_patch(circle)
+        ax.plot(path[:, 0], path[:, 1], 'k-', label='full_path_traveled')
 
     # 碰撞起始、終點、碰撞點位的圓形
     if closest_points is not None and len(closest_points) > 0:

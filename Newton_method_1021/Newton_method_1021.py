@@ -40,7 +40,7 @@ visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, position
 while np.linalg.norm(current_position - goal) > 0.1:
     
     # 獲取下一個目標點
-    next_position = origin_path[current_position_index + 1]
+    next_position = origin_path[current_position_index]
 
     # 檢查當前點到下一個點的線段是否經過障礙物或安全區域
     if line_intersects_any_obstacle(current_position, next_position, obstacles, safety_distance):
@@ -50,17 +50,18 @@ while np.linalg.norm(current_position - goal) > 0.1:
         # 如果找到了最近的障礙物，則將其加入 visited_obstacles
         if closest_obstacle is not None:
             visited_obstacles.append(closest_obstacle)
-
         # 找到初始路徑中所有經過最近障礙物的點，包含這幾個點位的陣列中首個和最後的點位之相鄰點位
         # 這兩個相鄰點位做為避障起始、結束點位，但這兩點位不會跟著一起偏移和最佳化
         points_on_obstacle, indices_of_closest_points = path_before_obstacle_avoidance(origin_path, closest_obstacle, safety_distance)
-
+        # print('points_on_obstacle', points_on_obstacle)
+        # print('closest_obstacle', closest_obstacle)
         # 根據避障策略生成新的路徑，將避障點設為 initial guess
         new_path = generate_new_path(points_on_obstacle, closest_obstacle, safety_distance, offset_distance=1.0)
-        
+
         # 若不使用牛頓法最佳化的點位，而是用這裡單純偏移後的點位，就要以下這行程式把new_path轉型別，
         # 然後放入origin_path = update_origin_path(origin_path, new_path, indices_of_closest_points)使用
         new_path = np.array(new_path)
+        # print('new_path', new_path)
 
         # # 使用牛頓法進行路徑最佳化
         # optimized_path, iter_num = newton_method(new_path, points_on_obstacle, W)
@@ -79,23 +80,34 @@ while np.linalg.norm(current_position - goal) > 0.1:
         # origin_path = update_origin_path(origin_path, X_opt_final, indices_of_closest_points)
         
         # 若不使用牛頓法最佳化的點位，而是用new_path點位，則用這行程式更新origin_path
+        # print('origin_path 1 = ', origin_path)
         origin_path = update_origin_path(origin_path, new_path, indices_of_closest_points)
+        # print('new_path = ', new_path)
+        # print('origin_path 2 = ', origin_path)
 
         # 更新當前位置
-        current_position = next_position
+        current_position = origin_path[current_position_index]
         current_position_index += 1
         full_path_traveled.append(current_position)
+        # 檢查是否到達終點
+        if np.linalg.norm(current_position - goal) <= 0.1:
+            print("到達終點!")
+            break
+        # print('current origin_path', origin_path)
+        # 更新視覺化
+        # print('new_path', new_path)
+        visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, positions=current_position, original_path=initial_path, new_points=new_path, path = full_path_traveled)
     else:
         # 沒有碰到障礙物，更新當前位置
         current_position = next_position
         current_position_index += 1
         full_path_traveled.append(current_position)
 
-    # 檢查是否到達終點
-    if np.linalg.norm(current_position - goal) <= 0.1:
-        print("到達終點!")
-        break
-    # print('current origin_path', origin_path)
-    # 更新視覺化
-    visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, positions=current_position, original_path=initial_path)
+        # 檢查是否到達終點
+        if np.linalg.norm(current_position - goal) <= 0.1:
+            print("到達終點!")
+            break
+        # print('current origin_path', origin_path)
+        # 更新視覺化
+        visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, positions=current_position, original_path=initial_path, path = full_path_traveled)
 plt.show()

@@ -61,7 +61,6 @@ def path_before_obstacle_avoidance(path, obstacle, safety_size):
 #  將初始路徑上的碰撞點偏移出障礙物(含安全距離)的範圍行程新路徑，作為避障路徑最佳化的Initial Guess。
 def generate_new_path(closest_points, obstacles, safety_size, offset_distance):
     new_paths = []  # 用於儲存所有障礙物的避障路徑
-
     offset_directions = []  # 儲存每個障礙物的偏移方向
 
     if closest_points:  # 確保有碰撞點
@@ -71,7 +70,8 @@ def generate_new_path(closest_points, obstacles, safety_size, offset_distance):
         normal_vector_left = np.array([-tangent_vector[1], tangent_vector[0]])
         normal_vector_right = np.array([tangent_vector[1], -tangent_vector[0]])
 
-        for point in closest_points:
+        # 排除首尾點位，只考慮中間的點來判斷偏移方向
+        for point in closest_points: # 排除第一個和最後一個點
             closest_obstacle_edge_distance = float('inf')
             chosen_normal_vector = None
             
@@ -98,6 +98,7 @@ def generate_new_path(closest_points, obstacles, safety_size, offset_distance):
             offset_directions.append(tuple(chosen_normal_vector))  # 轉換為元組
 
         # 找到出現最多的偏移方向
+        # print('offset_directions', offset_directions)
         most_common_direction = max(set(offset_directions), key=offset_directions.count)
 
         new_path = []

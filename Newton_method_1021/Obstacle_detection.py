@@ -99,7 +99,6 @@ def find_closest_obstacle(current_position, obstacle_list, visited_obstacles):
     for obstacle in obstacle_list:
         if obstacle in visited_obstacles:
             continue  # 跳過已經訪問過的障礙物
-        
         # 計算當前位置到障礙物中心的距離
         bottom_left, top_right = obstacle
         obstacle_center = (bottom_left + top_right) / 2
@@ -109,5 +108,4 @@ def find_closest_obstacle(current_position, obstacle_list, visited_obstacles):
         if distance < min_distance:
             min_distance = distance
             closest_obstacle = obstacle
-    
     return closest_obstacle
