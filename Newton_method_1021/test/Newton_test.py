@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-from GUI import visualize_grid
-from Path import generate_initial_path
+# from GUI import visualize_grid
+# from Path import generate_initial_path
 
 def newton_method(X_init, X_ori, W, safety_size ,tol=1e-3, danger_threshold=0.5, obstacles=[]):
     """
@@ -202,7 +202,7 @@ start = np.array([0, 0])
 goal = np.array([10, 10])
 circle_radius = 0.1
 waypoint_distance = 0.3
-initial_path = generate_initial_path(start, goal, waypoint_distance)
+# initial_path = generate_initial_path(start, goal, waypoint_distance)
 
 new_path =  np.array([[[2.13567821, 0.72146465], [2.6713925,  1.25717893], [3.20710678, 1.79289322]]])       
 points_on_obstacle = np.array([[1.07142857, 1.07142857], [1.42857143, 1.42857143], [1.96428571, 1.96428571], 
@@ -216,8 +216,8 @@ W = [1, 1, 1, 1, 1, 1, 1]
 # obs = [np.array([0.5, 1.5]), np.array([2.5, 2.5])]
 X_opt_final, iter_num = newton_method(new_path, points_on_obstacle, W, safety_size, obstacles=obstacles)
 print('X_opt_final ', X_opt_final)
-visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, original_path=initial_path, new_points=X_opt_final)
-plt.show()
+# visualize_grid(ax, start, goal, obstacles, circle_radius=circle_radius, original_path=initial_path, new_points=X_opt_final)
+# plt.show()
 
 
 ###### 淘汰程式
