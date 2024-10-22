@@ -1,0 +1,7 @@
+# Create a conda environment with Python 3.8
+# pip install following packages
+pip install numpy
+pip install matplotlib
+pip install sympy
+# For B-Spline
+pip install scipy
