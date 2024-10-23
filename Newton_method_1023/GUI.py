@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 # 可視化
 def visualize_grid(ax, start, goal, obstacles, circle_radius=None, positions=None, original_path=None, path=None, new_points=None, closest_points=None):
     ax.cla()  # 清除當前的圖表，保留窗口
-    ax.plot(start[0], start[1], 'go', markersize=10, label='Start')  # 起點
-    ax.plot(goal[0], goal[1], 'ro', markersize=10, label='Goal')  # 終點
+    ax.plot(start[0], start[1], 'go', markersize=3, label='Start')  # 起點
+    ax.plot(goal[0], goal[1], 'ro', markersize=3, label='Goal')  # 終點
 
     # 畫出環境中的障礙物
     for bottom_left, top_right in obstacles:
@@ -24,15 +24,15 @@ def visualize_grid(ax, start, goal, obstacles, circle_radius=None, positions=Non
     # 當前位置點位的圓形，將 positions 列表轉換成 NumPy 陣列
     if positions is not None:
         positions = np.array(positions)  # 將 positions 列表轉換成 NumPy 陣列
-        for pos in positions:
-            ax.plot(positions[0], positions[1], 'bo', label='Recent Point')
+        for i, pos in enumerate(positions):
+            ax.plot(positions[0], positions[1], 'bo', label='Recent Point' if i == 0 else "")
 
     # 新生成的避障路徑
     if new_points is not None:
-        # 假設 new_points 是一個包含路徑的列表，遍歷所有路徑中的點
-        for path in new_points:  # 這裡 new_points 是包含單一路徑的列表
-            for point in path:  # 遍歷路徑中的每個點
-                ax.plot(point[0], point[1], 'm*', label='Avoidance Path')
+        new_points = np.array(new_points)  # 將 new_points 轉換為 NumPy 陣列
+        for i, point in enumerate(new_points):  # 遍歷 new_points 中的每個點
+            ax.plot(point[0], point[1], 'm*', markersize=5, label='Avoidance Path' if i == 0 else "")
+    
     # 路徑的圓形
     if path is not None:
         path = np.array(path)
@@ -53,4 +53,4 @@ def visualize_grid(ax, start, goal, obstacles, circle_radius=None, positions=Non
     ax.legend()
     ax.grid(True)
     plt.draw()
-    plt.pause(1)
+    plt.pause(0.01)

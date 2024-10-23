@@ -109,12 +109,9 @@ def generate_new_path(closest_points, obstacles, safety_size, offset_distance):
         # new_paths.append(np.array(new_path))
         new_paths.append(new_path)
 
-    return new_paths  # 返回經過障礙物的碰撞點偏移過後的新路徑(不含位經過障礙物的碰撞起始和結束點位)
+    return new_paths  # 返回經過障礙物的碰撞點偏移過後的新路徑(不含未經過障礙物的碰撞起始和結束點位)
 
 def update_origin_path(origin_path, X_opt_final, indices_of_closest_points):
-    # print('origin_path_in', origin_path)
-    # print('X_opt_final_in', X_opt_final)
-    # print('indices_of_closest_points_in', indices_of_closest_points)
     # 0. 複製原始路徑陣列到一個新陣列使用
     new_origin_path = origin_path.copy()
     # 1. 將原始路徑新陣列刪除掉經過障礙物點位(含後面全部點位)
@@ -126,77 +123,11 @@ def update_origin_path(origin_path, X_opt_final, indices_of_closest_points):
         i+=1
     for i in sorted(new_index_list, reverse=True):
         new_origin_path = np.delete(new_origin_path, i, axis=0)
-    # print('1. new_origin_path', new_origin_path)
     # 2. 將原始路徑新陣列後方加上最佳化之後的新路徑點位
     # 先把X_opt_final轉換形狀(1, 3, 2)to(3, 2)
     X_opt_final = X_opt_final.reshape(3, 2)
-    # print('X_opt_final', X_opt_final)
     new_origin_path = np.vstack((new_origin_path, X_opt_final))
-    # print('2. new_origin_path', new_origin_path)
     # 3. 將原先後方不在障礙物範圍的點位重新加入到原始路徑新陣列
     new_origin_path = np.vstack((new_origin_path, origin_path[indices_of_closest_points[-1]:]))
-    # print('3. new_origin_path', new_origin_path)
 
     return new_origin_path
-
-########################
-
-# 淘汰程式
-
-# def path_before_obstacle_avoidance(path, obstacle, safety_size):
-#     points_within_obstacle = []  # 用於儲存在障礙物內的點
-#     indices_of_closest_points = []  # 用於儲存 closest_points 的索引值
-
-#     # 檢查路徑上每個點是否在擴展過的障礙物區域內
-#     for p in path:
-#         if point_in_obstacle(p, obstacle, safety_size):
-#             points_within_obstacle.append(p)
-#     # print('path', path)
-#     if not points_within_obstacle:
-#         return [], []  # 如果沒有點在障礙物內，返回空列表和空索引
-
-#     # 找到最早和最晚穿過障礙物的點
-#     first_obstacle_point = points_within_obstacle[0]
-#     last_obstacle_point = points_within_obstacle[-1]
-
-#     # 若只有一個點經過障礙物，則直接返回該點，不做處理
-#     if len(points_within_obstacle) == 1:
-#         first_idx = np.where(np.all(path == first_obstacle_point, axis=1))[0][0]
-#         return [first_obstacle_point], [first_idx]  # 返回點和其索引
-#     # 若想要將每個經過障礙物的點位都做偏移，則把以下兩行程式註解即可。
-#     # 以下兩行程式主要是只取經過障礙物的起始、中間、結束這三個點位以減少計算量。
-#     # 計算初始和結束點的平均值作為中間點
-#     middle_point = (first_obstacle_point + last_obstacle_point) / 2
-#     # 更新points_within_obstacle，保留初始點、中間點、結束點
-#     points_within_obstacle = [first_obstacle_point, middle_point, last_obstacle_point]
-
-#     # 找到這些點在路徑中的索引
-#     first_idx = np.where(np.all(path == first_obstacle_point, axis=1))[0][0]
-#     last_idx = np.where(np.all(path == last_obstacle_point, axis=1))[0][0]
-
-#     # 獲取與這些障礙物點相鄰的點
-#     closest_points = []
-#     if first_idx > 0:
-#         closest_points.append(path[first_idx - 1])  # 碰撞起始點的前一點
-#         indices_of_closest_points.append(first_idx - 1)  # 儲存索引
-#     closest_points.extend(points_within_obstacle)  # 初始點、中間點和結束點
-#     indices_of_closest_points.extend([first_idx, last_idx])  # 儲存索引
-#     if last_idx < len(path) - 1:
-#         closest_points.append(path[last_idx + 1])  # 碰撞終點的下一點
-#         indices_of_closest_points.append(last_idx + 1)  # 儲存索引
-#     return closest_points, indices_of_closest_points  # 返回碰撞起始點、中間點、終點及索引
-
-# def update_origin_path(origin_path, X_opt_final, indices_of_closest_points):
-
-#     print('indices_of_closest_points', indices_of_closest_points)
-#     # 複製原始路徑陣列到一個新陣列使用
-#     new_origin_path = origin_path.copy()
-#     # 將原始路徑新陣列刪除掉經過障礙物點位(含後面全部點位)
-#     new_origin_path = np.delete(new_origin_path, new_origin_path[indices_of_closest_points[1]:], axis=0)
-#     # 將原始路徑新陣列後方加上最佳化之後的新路徑點位
-#     new_origin_path = np.vstack((new_origin_path, X_opt_final))
-#     # 將原先後方不在障礙物範圍的點位重新加入到原始路徑新陣列
-#     new_origin_path = np.vstack((new_origin_path, origin_path[indices_of_closest_points[-1]:]))
-#     # print('new_origin_path', new_origin_path)
-
-#     return new_origin_path

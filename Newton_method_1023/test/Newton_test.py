@@ -93,6 +93,8 @@ obstacle = np.array([[0.5, 1.5], [2.5, 2.5]])  # 左下角和右上角座標
 safety_size = 0.3  # 障礙物周圍安全範圍，例如 r=0.1 的圓形物件對應的安全距離
 
 # 執行牛頓法並顯示輸出結果
+print('X_init type', type(X_init))
+print('X_init size', np.shape(X_init))
 optimal_X, iter_num = newton_method(X_init, X_origin, W, obstacle, safety_size)
 print(f"Optimal solution: {optimal_X}")
 print(f"Converged in {iter_num} iterations.")
