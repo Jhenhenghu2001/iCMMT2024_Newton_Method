@@ -24,7 +24,6 @@ def newton_method():
         f_ndy = objective_function(X - delta * np.array([0, 1]))
         f_dxdy = objective_function(X + delta * np.array([1, 1]))
 
-        # 使用正確的運算符號 ** 來代替 ^
         dfx = (f_dx - f_x) / delta
         dfy = (f_dy - f_x) / delta
         dfxx = (f_dx - 2 * f_x + f_ndx) / (delta**2)
