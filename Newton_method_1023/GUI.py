@@ -31,7 +31,7 @@ def visualize_grid(ax, start, goal, obstacles, circle_radius=None, positions=Non
     if new_points is not None:
         new_points = np.array(new_points)  # 將 new_points 轉換為 NumPy 陣列
         for i, point in enumerate(new_points):  # 遍歷 new_points 中的每個點
-            ax.plot(point[0], point[1], 'm*', markersize=5, label='Avoidance Path' if i == 0 else "")
+            ax.plot(point[0], point[1], 'mo', markersize=5, label='Avoidance Path' if i == 0 else "")
     
     # 路徑的圓形
     if path is not None:
@@ -53,4 +53,4 @@ def visualize_grid(ax, start, goal, obstacles, circle_radius=None, positions=Non
     ax.legend()
     ax.grid(True)
     plt.draw()
-    plt.pause(0.01)
+    plt.pause(0.1)
