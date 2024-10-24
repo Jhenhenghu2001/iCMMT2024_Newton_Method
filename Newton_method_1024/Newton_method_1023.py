@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
-from scipy.interpolate import splprep, splev
 from Obstacle_detection import line_intersects_any_obstacle, find_closest_obstacle, point_in_obstacle
 from GUI import visualize_grid
 from Path import generate_initial_path, path_before_obstacle_avoidance, generate_new_path, update_origin_path, calculate_path_length

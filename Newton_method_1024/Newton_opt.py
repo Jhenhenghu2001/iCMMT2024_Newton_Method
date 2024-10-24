@@ -12,9 +12,9 @@ def objective_function(X, X_ori, W):
          w2 * np.linalg.norm(X2 - X2_ori)**2 +
          w3 * np.linalg.norm(X3 - X3_ori)**2 +
          wH * np.linalg.norm(X1 - XH)**2 +
-         wT * np.linalg.norm(X3 - XT)**2 +
-         w21 * np.linalg.norm(X2 - X1)**2 +
-         w32 * np.linalg.norm(X3 - X2)**2)
+         wT * np.linalg.norm(X3 - XT)**2 )
+        #  w21 * np.linalg.norm(X2 - X1)**2 +
+        #  w32 * np.linalg.norm(X3 - X2)**2)
     return f
 
 # 使用 finite difference 計算梯度

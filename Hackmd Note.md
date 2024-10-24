@@ -20,6 +20,7 @@
     - [10/21 進度](#1021-進度)
     - [10/22 進度](#1022-進度)
     - [10/23 進度](#1023-進度)
+    - [10/24 進度](#1024-進度)
   - [Not use](#not-use)
 
 ---
@@ -86,6 +87,10 @@
 ### 10/23 進度
 
 - [iCMMT 2024 實驗內容-10/23 進度](https://hackmd.io/@JhenHeng/iCMMT_2024_Experiment-1023)
+
+### 10/24 進度
+
+- [iCMMT 2024 實驗內容-10/24 進度](https://hackmd.io/@JhenHeng/iCMMT_2024_Experiment-1024)
 
 ## Not use
 

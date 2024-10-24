@@ -39,7 +39,7 @@ def path_before_obstacle_avoidance(path, obstacle, safety_size):
     # 更新points_within_obstacle，保留初始點、中間點、結束點
     points_within_obstacle = [first_obstacle_point, middle_point, last_obstacle_point]
 
-    # 找到這些點在路徑中的索引
+    # 找到first_idx 和 last_idx之間所有點在路徑中的索引
     first_idx = np.where(np.all(path == first_obstacle_point, axis=1))[0][0]
     last_idx = np.where(np.all(path == last_obstacle_point, axis=1))[0][0]
 
