@@ -1,3 +1,4 @@
+clear;clc;close all;
 % 定義網格範圍
 x = linspace(0, 1000, 200); % X 軸範圍
 y = linspace(0, 1000, 200); % Y 軸範圍
